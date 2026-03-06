@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <meta name="theme-color" content="#09090F"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <title>Repaso RM · Admisión 2026</title>
+
+  <!-- ── Google Fonts ── -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
+  <style>
+    /* ══ RESET & BASE ══ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:      #09090F;
+      --card:    #0D0D1A;
+      --card2:   #0F0F1C;
+      --border:  #161622;
+      --border2: #181826;
+      --gold:    #C09828;
+      --teal:    #30AA8C;
+      --blue:    #4E78E8;
+      --red:     #C85060;
+      --purple:  #A050D8;
+      --text:    #E2DDD4;
+      --dim:     #383848;
+      --muted:   #222232;
+      --dark:    #1C1C2C;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bot: env(safe-area-inset-bottom, 0px);
+    }
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Outfit', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    .sf { font-family: 'Cormorant Garamond', serif; }
+    button { font-family: 'Outfit', sans-serif; }
+    input  { font-family: 'Outfit', sans-serif; }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 2px; }
+    ::-webkit-scrollbar-thumb { background: var(--border); }
+
+    /* ── Animations ── */
+    @keyframes fadeUp   { from { opacity:0; transform:translateY(16px) } to { opacity:1; transform:none } }
+    @keyframes slideIn  { from { opacity:0; transform:translateY(10px) } to { opacity:1; transform:none } }
+    @keyframes scaleNum { 0%{transform:scale(.7);opacity:0} 65%{transform:scale(1.05)} 100%{transform:scale(1);opacity:1} }
+    @keyframes barFill  { from { width:0 } to { width:var(--w) } }
+    @keyframes spin     { to { transform:rotate(360deg) } }
+
+    .fu  { animation: fadeUp .45s ease both; }
+    .si  { animation: slideIn .32s ease both; }
+    .sn  { animation: scaleNum .5s cubic-bezier(.34,1.56,.64,1) both; }
+
+    /* ══ LAYOUT ══ */
+    #app {
+      max-width: 430px;
+      margin: 0 auto;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* ══ SCREEN: hidden by default ══ */
+    .screen { display: none; flex-direction: column; min-height: 100vh; }
+    .screen.active { display: flex; }
+
+    /* ══ TOPBAR ══ */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 20px;
+      border-bottom: 1px solid #0F0F1A;
+      background: rgba(9,9,15,.97);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .topbar-unis { display: flex; gap: 12px; }
+    .topbar-uni  { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+    .topbar-badge {
+      background: #0F0F1A;
+      border: 1px solid var(--border2);
+      border-radius: 20px;
+      padding: 5px 12px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--dim);
+      text-transform: uppercase;
+    }
+
+    /* ══ INPUT ══ */
+    .inp {
+      background: var(--card);
+      border: 1px solid var(--border2);
+      border-radius: 6px;
+      padding: 13px 14px;
+      color: var(--text);
+      font-size: 15px;
+      width: 100%;
+      outline: none;
+      transition: border-color .2s;
+      letter-spacing: .2px;
+      -webkit-appearance: none;
+    }
+    .inp:focus { border-color: var(--gold); }
+    .inp::placeholder { color: var(--dark); }
+
+    /* ══ AREA CARD ══ */
+    .area-card {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 13px 14px;
+      background: var(--card);
+      border: 1px solid var(--border2);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all .2s;
+      margin-bottom: 9px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .area-card.sel { background: rgba(192,152,40,.08); }
+    .area-radio {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      border: 2px solid #202030;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: border-color .2s;
+    }
+    .area-radio-dot {
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      display: none;
+    }
+    .area-card.sel .area-radio-dot { display: block; }
+    .area-emoji {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 19px;
+      flex-shrink: 0;
+    }
+
+    /* ══ BTN PRIMARY ══ */
+    .btn-primary {
+      width: 100%;
+      padding: 15px;
+      border-radius: 10px;
+      border: none;
+      background: var(--card);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: not-allowed;
+      transition: all .3s;
+    }
+    .btn-primary.ready {
+      background: linear-gradient(135deg, #C09828, #9A7818);
+      color: var(--bg);
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(192,152,40,.18);
+    }
+
+    /* ══ EXAM HEADER ══ */
+    .exam-header {
+      background: rgba(9,9,15,.97);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid #0F0F1A;
+      padding: 10px 16px 6px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .progress-bar-track {
+      height: 2px;
+      background: #0F0F1A;
+      border-radius: 1px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--blue));
+      transition: width .4s;
+      border-radius: 1px;
+    }
+
+    /* ══ TIMER CIRCLE ══ */
+    .timer-wrap {
+      position: relative;
+      width: 58px; height: 58px;
+      flex-shrink: 0;
+    }
+    .timer-wrap svg {
+      transform: rotate(-90deg);
+      position: absolute; top:0; left:0;
+    }
+    .timer-num {
+      position: absolute; inset:0;
+      display: flex; align-items:center; justify-content:center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 15px; font-weight: 700;
+    }
+
+    /* ══ QUESTION CARD ══ */
+    .q-card {
+      margin: 10px 16px 0;
+      background: var(--card);
+      border-radius: 12px;
+      padding: 17px 15px;
+      flex: 1;
+    }
+    .q-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--text);
+      margin-bottom: 18px;
+    }
+
+    /* ══ OPTION BTN ══ */
+    .opt {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 13px;
+      background: #0F0F1C;
+      border: 1.5px solid #16162A;
+      border-radius: 9px;
+      cursor: pointer;
+      text-align: left;
+      transition: all .15s;
+      width: 100%;
+      margin-bottom: 8px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .opt:last-child { margin-bottom: 0; }
+    .opt-letter {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 1px;
+      border: 1.5px solid #303048;
+      display: flex; align-items:center; justify-content:center;
+      font-size: 11px; font-weight: 700;
+      color: #303048;
+      transition: all .15s;
+    }
+    .opt-text {
+      font-size: 14px;
+      line-height: 1.5;
+      color: #505068;
+      font-weight: 400;
+    }
+    .opt.selected {
+      border-color: var(--gold);
+      background: rgba(192,152,40,.1);
+    }
+    .opt.selected .opt-letter { border-color: var(--gold); color: var(--gold); }
+    .opt.selected .opt-text   { color: var(--text); }
+
+    .opt.correct {
+      border-color: var(--teal);
+      background: rgba(48,170,140,.08);
+    }
+    .opt.correct .opt-letter {
+      background: var(--teal); border-color: var(--teal); color: var(--bg);
+    }
+    .opt.correct .opt-text { color: var(--text); font-weight: 500; }
+
+    .opt.wrong {
+      border-color: var(--red);
+      background: rgba(200,80,96,.08);
+    }
+    .opt.wrong .opt-letter {
+      background: var(--red); border-color: var(--red); color: var(--bg);
+    }
+    .opt.wrong .opt-text { color: var(--text); }
+
+    /* ══ FEEDBACK ══ */
+    .feedback {
+      margin-top: 13px;
+      border-radius: 0 8px 8px 0;
+      padding: 11px 13px;
+      background: #0A0A12;
+    }
+    .feedback-label {
+      font-size: 8px; font-weight: 700; letter-spacing: 2.5px;
+      text-transform: uppercase; margin-bottom: 5px;
+    }
+    .feedback-tip {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 14px; font-style: italic;
+      color: #585870; line-height: 1.75;
+    }
+
+    /* ══ BOTTOM NAV ══ */
+    .exam-bottom {
+      padding: 11px 16px calc(11px + var(--safe-bot));
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #0D0D1C;
+      background: rgba(9,9,15,.97);
+    }
+    .btn-next {
+      background: transparent;
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      padding: 10px 20px;
+      color: var(--gold);
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all .2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ══ RESULTS ══ */
+    .results-body {
+      padding: 16px 20px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-bottom: calc(40px + var(--safe-bot));
+    }
+    .score-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px 18px;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    .score-big {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 86px; font-weight: 300;
+      color: #171724; line-height: 1;
+      letter-spacing: -5px;
+      flex-shrink: 0;
+    }
+    .trio {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+    }
+    .trio-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 15px 8px;
+      text-align: center;
+    }
+    .trio-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 44px; font-weight: 400;
+      line-height: 1; margin-bottom: 3px;
+    }
+    .trio-lbl {
+      font-size: 8px; font-weight: 700; letter-spacing: 1.5px;
+      color: var(--muted); text-transform: uppercase;
+    }
+    .half-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .half-item {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 10px; padding: 14px 12px;
+    }
+    .tema-bar-track {
+      height: 2px; background: #0F0F1C;
+      border-radius: 1px; overflow: hidden; margin-top: 5px;
+    }
+    .tema-bar-fill {
+      height: 100%; border-radius: 1px;
+      transition: width 1.1s ease; opacity: .9;
+    }
+    .error-item {
+      margin-bottom: 16px; padding-bottom: 16px;
+      border-bottom: 1px solid #0D0D1C;
+    }
+    .error-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+    /* ══ SPINNER / SAVING ══ */
+    .saving-dot {
+      display: inline-block;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      border: 2px solid var(--teal);
+      border-top-color: transparent;
+      animation: spin .7s linear infinite;
+      margin-right: 6px;
+    }
+
+    /* ══ BADGE TIPO ══ */
+    .tipo-badge {
+      font-size: 9px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase;
+      border-radius: 4px; padding: 4px 8px;
+    }
+
+    /* ══ LABEL ══ */
+    .field-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 2.5px;
+      color: var(--dim); text-transform: uppercase;
+      display: block; margin-bottom: 7px;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ═══════════════════ LANDING ═══════════════════ -->
+  <section class="screen active" id="screen-land">
+
+    <!-- topbar -->
+    <div class="topbar">
+      <div class="topbar-unis">
+        <span class="topbar-uni" style="color:#E2DDD4">UNI</span>
+        <span class="topbar-uni" style="color:#E2DDD4">UNMS</span>
+        <span class="topbar-uni" style="color:#222232">PUCP</span>
+        <span class="topbar-uni" style="color:#222232">UNSA</span>
+      </div>
+      <div class="topbar-badge">Admisión 2026</div>
+    </div>
+
+    <!-- hero -->
+    <div style="padding:44px 20px 32px; background:linear-gradient(170deg,#0C0C16 0%,#09090F 100%)">
+      <div class="fu" style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+        <div style="width:24px;height:1.5px;background:var(--gold)"></div>
+        <span style="font-size:10px;font-weight:600;letter-spacing:3.5px;color:var(--gold);text-transform:uppercase">Simulacro Oficial</span>
+      </div>
+      <div class="sf fu" style="animation-delay:.06s;font-size:72px;font-style:italic;font-weight:400;color:var(--gold);line-height:.88;margin-bottom:2px">Repaso</div>
+      <div class="fu" style="animation-delay:.12s;font-size:36px;font-weight:700;color:var(--text);letter-spacing:-1.5px;margin-bottom:24px">de RM</div>
+      <div class="fu" style="animation-delay:.18s;border-left:2px solid var(--border2);padding-left:16px">
+        <p class="sf" style="font-size:17px;font-style:italic;color:#404055;line-height:1.85">
+          12 preguntas · 40 s por pregunta<br>Ecuaciones · Edades · Magnitudes
+        </p>
+      </div>
+    </div>
+
+    <!-- form -->
+    <div style="padding:0 20px; flex:1">
+      <div class="fu" style="animation-delay:.22s;display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:22px">
+        <div>
+          <label class="field-label">Nombre</label>
+          <input class="inp" id="inp-nom" placeholder="David" autocomplete="given-name"/>
+        </div>
+        <div>
+          <label class="field-label">Apellido</label>
+          <input class="inp" id="inp-ape" placeholder="Samuel" autocomplete="family-name"/>
+        </div>
+      </div>
+
+      <label class="field-label fu" style="animation-delay:.26s;margin-bottom:12px">Modalidad</label>
+
+      <div id="areas-container" style="margin-bottom:28px"></div>
+
+      <button class="btn-primary fu" style="animation-delay:.44s" id="btn-start" onclick="startExam()">
+        Comenzar Repaso →
+      </button>
+      <div style="height:20px"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ EXAM ═══════════════════ -->
+  <section class="screen" id="screen-exam">
+
+    <!-- sticky header -->
+    <div class="exam-header">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <div>
+          <div id="ex-name" style="font-size:12px;font-weight:600;color:var(--text)"></div>
+          <div id="ex-modal" style="font-size:10px;color:#2E2E3E;margin-top:1px;font-style:italic;font-family:'Cormorant Garamond',serif"></div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:center">
+          <div style="text-align:center">
+            <div id="ex-cor" style="font-size:16px;font-weight:700;color:var(--teal);line-height:1">0</div>
+            <div style="font-size:8px;letter-spacing:2px;color:#1C1C2C;text-transform:uppercase">✓</div>
+          </div>
+          <div style="width:1px;height:22px;background:var(--border)"></div>
+          <div style="text-align:center">
+            <div id="ex-err" style="font-size:16px;font-weight:700;color:var(--red);line-height:1">0</div>
+            <div style="font-size:8px;letter-spacing:2px;color:#1C1C2C;text-transform:uppercase">✗</div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="progress-bar-track" style="flex:1">
+          <div class="progress-bar-fill" id="ex-progress" style="width:0%"></div>
+        </div>
+        <span id="ex-qnum" style="font-size:9px;font-weight:600;color:#282838;min-width:32px;text-align:right">1/12</span>
+      </div>
+    </div>
+
+    <!-- timer card -->
+    <div class="si" style="margin:12px 16px 0;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 15px;display:flex;align-items:center;gap:13px">
+      <!-- SVG timer -->
+      <div class="timer-wrap">
+        <svg width="58" height="58" viewBox="0 0 58 58">
+          <circle cx="29" cy="29" r="26" fill="none" stroke="#161622" stroke-width="3"/>
+          <circle id="timer-ring" cx="29" cy="29" r="26" fill="none" stroke="#30AA8C" stroke-width="3"
+            stroke-dasharray="163.36" stroke-dashoffset="0"
+            style="transition:stroke-dashoffset .9s linear,stroke .4s"/>
+        </svg>
+        <div class="timer-num" id="timer-num" style="color:var(--teal)">40</div>
+      </div>
+      <div style="flex:1">
+        <div id="timer-label" style="font-size:17px;font-weight:600;color:var(--text);margin-bottom:2px">40 segundos</div>
+        <div id="q-meta" style="font-size:11px;color:#383848;font-family:'Cormorant Garamond',serif;font-style:italic">CÁLCULO · Planteo de Ecuaciones</div>
+      </div>
+      <div id="tipo-badge" class="tipo-badge" style="color:var(--blue);background:rgba(78,120,232,.12);border:1px solid rgba(78,120,232,.3)">CÁLCULO</div>
+    </div>
+
+    <!-- question -->
+    <div class="q-card si" id="q-card" style="border-top:2px solid var(--blue);border:1px solid rgba(78,120,232,.18);border-top:2px solid var(--blue)">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+        <div id="q-dot" style="width:4px;height:4px;border-radius:50%;background:var(--blue)"></div>
+        <span id="q-tema" style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--blue);text-transform:uppercase">Planteo de Ecuaciones</span>
+      </div>
+      <p class="q-text" id="q-text">Cargando...</p>
+      <div id="opts-container"></div>
+      <div id="feedback" class="feedback" style="display:none;border-left:3px solid var(--teal)">
+        <div id="fb-label" class="feedback-label" style="color:var(--teal)">✓  Correcto</div>
+        <p class="feedback-tip" id="fb-tip"></p>
+      </div>
+    </div>
+
+    <!-- bottom nav -->
+    <div class="exam-bottom">
+      <div id="ex-status" style="display:flex;align-items:center;gap:6px">
+        <span style="font-size:10px;color:#202030;letter-spacing:2px;text-transform:uppercase">Selecciona una alternativa</span>
+      </div>
+      <button class="btn-next" id="btn-next" style="display:none" onclick="nextQuestion()">
+        SIGUIENTE →
+      </button>
+    </div>
+
+  </section>
+
+  <!-- ═══════════════════ RESULTS ═══════════════════ -->
+  <section class="screen" id="screen-results">
+
+    <div style="padding:32px 20px 0">
+      <div class="fu" style="font-size:9px;font-weight:700;letter-spacing:3.5px;color:var(--gold);text-transform:uppercase;margin-bottom:9px">Resultado Final</div>
+      <div class="sf fu" style="animation-delay:.05s;font-size:44px;font-weight:400;color:var(--text);line-height:.94;margin-bottom:7px">Repaso Completado</div>
+      <div class="fu" style="animation-delay:.1s;display:flex;align-items:center;gap:8px;padding-bottom:18px;border-bottom:1px solid #0F0F1A">
+        <span id="res-name" style="font-size:14px;font-weight:700;color:var(--text)"></span>
+        <span style="width:3px;height:3px;border-radius:50%;background:#1C1C28"></span>
+        <span id="res-modal" class="sf" style="font-size:14px;font-style:italic;color:#323242"></span>
+      </div>
+    </div>
+
+    <div class="results-body" id="results-body">
+      <!-- dinamically filled -->
+    </div>
+
+  </section>
+
+</div><!-- #app -->
+
+<script>
+/* ════════════════════════════════════════════════
+   ⚙️  CONFIGURA ESTA URL DESPUÉS DE DESPLEGAR
+       EL APPS SCRIPT COMO WEB APP
+════════════════════════════════════════════════ */
+const APPS_SCRIPT_URL = "PEGA_AQUÍ_TU_URL_DE_APPS_SCRIPT";
+
+/* ── Colores por tema ── */
+const TC = {
+  "Planteo de Ecuaciones":     "#4E78E8",
+  "Edades":                    "#C09828",
+  "Magnitudes Proporcionales": "#30AA8C"
+};
+const TIPO_C = { "TEORÍA":"#A050D8", "CÁLCULO":"#4E78E8" };
+
+/* ── Areas ── */
+const AREAS = [
+  { id:"pre",  label:"Preuniversitario", sub:"UNI, UNMS, PUCP, UNSA",  e:"🎓", color:"#C09828" },
+  { id:"sec",  label:"Secundaria",       sub:"4° y 5° de secundaria",   e:"📚", color:"#4E78E8" },
+  { id:"adm",  label:"Admisión",         sub:"Examen de admisión 2026", e:"🏛️", color:"#8850D4" }
+];
+
+/* ── Preguntas ── */
+const Q = [
+  {id:1,t:"Planteo de Ecuaciones",tipo:"TEORÍA",
+   q:"¿Cuál es el <strong>primer paso correcto</strong> al resolver un problema de planteo de ecuaciones?",
+   o:["Operar directamente con los datos numéricos","Asignar una variable (incógnita) a la cantidad desconocida","Dividir todos los datos entre sí","Calcular por tanteo o ensayo-error"],
+   r:1,tip:"<strong>Método:</strong> 1) Leer y comprender. 2) Llamar <em>x</em> a la incógnita. 3) Plantear la ecuación. 4) Resolver. 5) Verificar en el enunciado original."},
+
+  {id:2,t:"Edades",tipo:"CÁLCULO",
+   q:"La edad de Ana es el <strong>triple</strong> de la de Luis. La <strong>suma de sus edades es 32</strong>. ¿Cuántos años tiene Ana?",
+   o:["20 años","22 años","24 años","26 años"],
+   r:2,tip:"Sea L = Luis → Ana = 3L.<br><strong>Ecuación:</strong> 3L + L = 32 → 4L = 32 → L = 8.<br>Ana = 3 × 8 = <strong>24 años</strong>."},
+
+  {id:3,t:"Magnitudes Proporcionales",tipo:"CÁLCULO",
+   q:"Si <strong>5 obreros</strong> construyen una pared en <strong>12 días</strong>, ¿cuántos días tardarán <strong>10 obreros</strong> al mismo ritmo?",
+   o:["24 días","10 días","8 días","6 días"],
+   r:3,tip:"<strong>Inversamente proporcional</strong> (más obreros → menos días).<br>5 × 12 = 10 × x → x = 60 ÷ 10 = <strong>6 días</strong>."},
+
+  {id:4,t:"Planteo de Ecuaciones",tipo:"CÁLCULO",
+   q:"El <strong>doble de un número</strong> disminuido en 8 es igual a <strong>20</strong>. Halla el número.",
+   o:["10","12","14","16"],
+   r:2,tip:"<strong>Ecuación:</strong> 2x − 8 = 20 → 2x = 28 → x = <strong>14</strong>.<br>Verificación: 2(14) − 8 = 28 − 8 = 20 ✓"},
+
+  {id:5,t:"Edades",tipo:"TEORÍA",
+   q:"Si la edad actual de Pedro es <em>x</em> años, su edad <strong>hace 7 años</strong> se representa como:",
+   o:["x + 7","x − 7","7x","x ÷ 7"],
+   r:1,tip:"<strong>Regla de edades:</strong><br>• Pasado (hace <em>n</em> años) = edad actual − n<br>• Futuro (en <em>n</em> años) = edad actual + n<br>Hace 7 años: <strong>x − 7</strong> años."},
+
+  {id:6,t:"Magnitudes Proporcionales",tipo:"TEORÍA",
+   q:"Dos magnitudes son <strong>inversamente proporcionales</strong> cuando:",
+   o:["Al aumentar una, la otra también aumenta","Al aumentar una, la otra disminuye en la misma razón","El cociente entre ellas siempre es cero","Ambas magnitudes son siempre iguales"],
+   r:1,tip:"<strong>Directa:</strong> y = k·x → cociente constante.<br><strong>Inversa:</strong> x·y = k → producto constante.<br>Ejemplos inversos: obreros–días, velocidad–tiempo."},
+
+  {id:7,t:"Planteo de Ecuaciones",tipo:"CÁLCULO",
+   q:"La suma de <strong>tres enteros consecutivos</strong> es 51. ¿Cuál es el <strong>mayor</strong> de ellos?",
+   o:["16","17","18","19"],
+   r:2,tip:"Sea n el menor. Los tres: n, n+1, n+2.<br><strong>Ecuación:</strong> 3n + 3 = 51 → n = 16.<br>El mayor = 16 + 2 = <strong>18</strong>."},
+
+  {id:8,t:"Edades",tipo:"CÁLCULO",
+   q:"Juan tiene <strong>3 veces</strong> la edad de Carlos. En <strong>4 años</strong>, Juan tendrá el <strong>doble</strong> de la edad de Carlos. ¿Cuántos años tiene Juan <em>ahora</em>?",
+   o:["9 años","12 años","15 años","18 años"],
+   r:1,tip:"Sea C = Carlos → Juan = 3C.<br><strong>Condición futura:</strong> 3C + 4 = 2(C + 4) → C = 4.<br>Juan = 3 × 4 = <strong>12 años</strong>."},
+
+  {id:9,t:"Magnitudes Proporcionales",tipo:"CÁLCULO",
+   q:"Si <strong>3 kg de arroz</strong> cuestan <strong>S/ 12,00</strong>, ¿cuánto costarán <strong>7 kg</strong> del mismo arroz?",
+   o:["S/ 24,00","S/ 26,00","S/ 28,00","S/ 30,00"],
+   r:2,tip:"<strong>Directamente proporcional</strong> (más kg → mayor costo).<br>x = (7 × 12) ÷ 3 = 84 ÷ 3 = <strong>S/ 28,00</strong>."},
+
+  {id:10,t:"Planteo de Ecuaciones",tipo:"CÁLCULO",
+   q:"Un número <strong>aumentado en 25</strong> es igual a <strong>4 veces ese número menos 5</strong>. Halla el número.",
+   o:["8","9","10","12"],
+   r:2,tip:"<strong>Ecuación:</strong> x + 25 = 4x − 5 → 30 = 3x → x = <strong>10</strong>.<br>Verificación: 10 + 25 = 35 = 4(10) − 5 ✓"},
+
+  {id:11,t:"Edades",tipo:"CÁLCULO",
+   q:"María tiene <strong>8 años más que Pedro</strong>. En <strong>6 años</strong>, la suma de sus edades será <strong>40</strong>. ¿Cuántos años tiene Pedro <em>ahora</em>?",
+   o:["8 años","9 años","10 años","12 años"],
+   r:2,tip:"Sea P = Pedro → María = P + 8.<br>(P+6) + (P+8+6) = 40 → 2P = 20 → P = <strong>10 años</strong>.<br>Verificación: 16 + 24 = 40 ✓"},
+
+  {id:12,t:"Magnitudes Proporcionales",tipo:"CÁLCULO",
+   q:"Un grifo llena un tanque en <strong>8 horas</strong>. ¿Cuánto tardarán <strong>4 grifos iguales</strong> juntos?",
+   o:["1 hora","2 horas","3 horas","4 horas"],
+   r:1,tip:"<strong>Inversamente proporcional</strong> (más grifos → menos tiempo).<br>1 × 8 = 4 × x → x = 8 ÷ 4 = <strong>2 horas</strong>."}
+];
+
+/* ════════ ESTADO ════════ */
+let state = {
+  nom:"", ape:"", area:"",
+  cur:0, sec:40,
+  sel:null, revealed:false,
+  results:[],
+  startTime:0,
+  intervalId:null
+};
+
+/* ════════ LANDING ════════ */
+(function buildAreas(){
+  const c = document.getElementById("areas-container");
+  AREAS.forEach((a, i) => {
+    const div = document.createElement("div");
+    div.className = "area-card fu";
+    div.style.animationDelay = (0.3 + i*0.06)+"s";
+    div.dataset.id = a.id;
+    div.innerHTML = `
+      <div class="area-radio" id="radio-${a.id}">
+        <div class="area-radio-dot" style="background:${a.color}"></div>
+      </div>
+      <div class="area-emoji" style="background:linear-gradient(135deg,${a.color}22,#14142A);border:1px solid ${a.color}25">
+        ${a.e}
+      </div>
+      <div>
+        <div style="font-size:16px;font-weight:600;color:#525268;margin-bottom:2px">${a.label}</div>
+        <div style="font-size:11px;color:#222232;letter-spacing:.2px">${a.sub}</div>
+      </div>`;
+    div.addEventListener("click", () => selectArea(a));
+    c.appendChild(div);
+  });
+})();
+
+function selectArea(area) {
+  document.querySelectorAll(".area-card").forEach(el => {
+    el.classList.remove("sel");
+    el.style.borderColor = "";
+    el.style.boxShadow = "";
+    el.querySelector(".area-radio").style.borderColor = "#202030";
+    el.querySelector("div>div:first-child").style.color = "#525268";
+  });
+  const card = document.querySelector(`.area-card[data-id="${area.id}"]`);
+  card.classList.add("sel");
+  card.style.borderColor = area.color;
+  card.style.boxShadow = `0 0 20px ${area.color}12`;
+  card.querySelector(".area-radio").style.borderColor = area.color;
+  card.querySelectorAll("div")[3].querySelector("div").style.color = "#E2DDD4";
+  state.area = area.id;
+  checkReady();
+}
+
+document.getElementById("inp-nom").addEventListener("input", checkReady);
+document.getElementById("inp-ape").addEventListener("input", checkReady);
+
+function checkReady() {
+  const btn = document.getElementById("btn-start");
+  const ok = document.getElementById("inp-nom").value.trim() &&
+             document.getElementById("inp-ape").value.trim() &&
+             state.area;
+  btn.classList.toggle("ready", !!ok);
+}
+
+function startExam() {
+  const nom = document.getElementById("inp-nom").value.trim();
+  const ape = document.getElementById("inp-ape").value.trim();
+  if (!nom || !ape || !state.area) return;
+  state.nom = nom;
+  state.ape = ape;
+  state.cur = 0;
+  state.results = [];
+  state.startTime = Date.now();
+
+  document.getElementById("ex-name").textContent = nom + " " + ape;
+  document.getElementById("ex-modal").textContent = AREAS.find(a=>a.id===state.area)?.label || "";
+
+  showScreen("exam");
+  loadQuestion();
+}
+
+/* ════════ EXAM ════════ */
+const C = 2 * Math.PI * 26; // 163.36
+
+function loadQuestion() {
+  const q = Q[state.cur];
+  const tc = TC[q.t] || "#4E78E8";
+  const pct = state.cur / Q.length * 100;
+
+  state.sel = null;
+  state.revealed = false;
+  state.sec = 40;
+
+  // header
+  document.getElementById("ex-progress").style.width = pct + "%";
+  document.getElementById("ex-qnum").textContent = (state.cur+1) + "/" + Q.length;
+
+  // timer
+  updateTimer(40);
+
+  // meta
+  document.getElementById("q-meta").textContent = q.tipo + " · " + q.t;
+  document.getElementById("timer-label").textContent = "40 segundos";
+
+  const tipoBadge = document.getElementById("tipo-badge");
+  tipoBadge.textContent = q.tipo;
+  const tc2 = TIPO_C[q.tipo] || tc;
+  tipoBadge.style.color = tc2;
+  tipoBadge.style.background = tc2 + "18";
+  tipoBadge.style.border = "1px solid " + tc2 + "40";
+
+  // question card accent
+  const card = document.getElementById("q-card");
+  card.style.borderColor = tc + "22";
+  card.style.borderTopColor = tc;
+
+  document.getElementById("q-dot").style.background = tc;
+  const temaEl = document.getElementById("q-tema");
+  temaEl.textContent = q.t;
+  temaEl.style.color = tc;
+
+  document.getElementById("q-text").innerHTML = q.q;
+
+  // options
+  const opts = document.getElementById("opts-container");
+  opts.innerHTML = "";
+  const OL = ["A","B","C","D"];
+  q.o.forEach((op, i) => {
+    const btn = document.createElement("button");
+    btn.className = "opt";
+    btn.dataset.idx = i;
+    btn.innerHTML = `
+      <div class="opt-letter">${OL[i]}</div>
+      <span class="opt-text">${op}</span>`;
+    btn.addEventListener("click", () => pick(i));
+    opts.appendChild(btn);
+  });
+
+  // feedback hidden
+  document.getElementById("feedback").style.display = "none";
+
+  // bottom
+  document.getElementById("ex-status").innerHTML =
+    '<span style="font-size:10px;color:#202030;letter-spacing:2px;text-transform:uppercase">Selecciona una alternativa</span>';
+  document.getElementById("btn-next").style.display = "none";
+
+  // start timer
+  clearInterval(state.intervalId);
+  state.intervalId = setInterval(tick, 1000);
+}
+
+function tick() {
+  state.sec--;
+  updateTimer(state.sec);
+  if (state.sec <= 0) {
+    clearInterval(state.intervalId);
+    // time expired
+    registerAnswer(-1);
+    showFeedback(false, true);
+  }
+}
+
+function updateTimer(s) {
+  const ring = document.getElementById("timer-ring");
+  const num  = document.getElementById("timer-num");
+  const lbl  = document.getElementById("timer-label");
+  const pct  = s / 40;
+  const col  = pct > .5 ? "#30AA8C" : pct > .25 ? "#C09828" : "#C85060";
+  ring.style.strokeDashoffset = C - C * pct;
+  ring.style.stroke = col;
+  num.textContent = s;
+  num.style.color = col;
+  lbl.textContent = s > 0 ? s + " segundo" + (s!==1?"s":"") : "Tiempo agotado";
+  lbl.style.color = s > 0 ? "#E2DDD4" : col;
+}
+
+function pick(i) {
+  if (state.revealed) return;
+  clearInterval(state.intervalId);
+  state.sel = i;
+  const correct = i === Q[state.cur].r;
+  registerAnswer(i);
+  showFeedback(correct, false);
+
+  // highlight selected
+  document.querySelectorAll(".opt").forEach((btn, idx) => {
+    if (idx === i && !correct) btn.classList.add("wrong");
+  });
+}
+
+function registerAnswer(selIdx) {
+  const q = Q[state.cur];
+  const correct = selIdx === q.r;
+  state.revealed = true;
+  state.results.push({
+    id: q.id, tema: q.t, tipo: q.tipo,
+    sel: selIdx, correct,
+    correctAns: q.o[q.r],
+    chosenAns: selIdx >= 0 ? q.o[selIdx] : null,
+    tip: q.tip, qText: q.q
+  });
+
+  // update score display
+  const co = state.results.filter(r=>r.correct).length;
+  const wr = state.results.filter(r=>!r.correct).length;
+  document.getElementById("ex-cor").textContent = co;
+  document.getElementById("ex-err").textContent = wr;
+
+  // mark correct option green
+  document.querySelectorAll(".opt")[q.r].classList.add("correct");
+}
+
+function showFeedback(correct, expired) {
+  const fb     = document.getElementById("feedback");
+  const fbLbl  = document.getElementById("fb-label");
+  const fbTip  = document.getElementById("fb-tip");
+  const q      = Q[state.cur];
+
+  fb.style.display = "block";
+  if (expired) {
+    fb.style.borderLeftColor = "#C09828";
+    fbLbl.style.color = "#C09828";
+    fbLbl.textContent = "⏱  Tiempo agotado";
+  } else if (correct) {
+    fb.style.borderLeftColor = "#30AA8C";
+    fbLbl.style.color = "#30AA8C";
+    fbLbl.textContent = "✓  Correcto";
+  } else {
+    fb.style.borderLeftColor = "#C85060";
+    fbLbl.style.color = "#C85060";
+    fbLbl.textContent = "✗  Incorrecto";
+  }
+  fbTip.innerHTML = q.tip;
+
+  // bottom bar
+  const isOk = !expired && correct;
+  const col  = expired ? "#C09828" : isOk ? "#30AA8C" : "#C85060";
+  const lbl  = expired ? "Sin tiempo" : isOk ? "Correcto" : "Incorrecto";
+  document.getElementById("ex-status").innerHTML = `
+    <span style="color:${col};font-size:13px">◆</span>
+    <span style="font-size:12px;font-weight:500;color:${col};margin-left:6px">${lbl}</span>`;
+
+  const btnNext = document.getElementById("btn-next");
+  btnNext.style.display = "flex";
+  btnNext.textContent = state.cur < Q.length-1 ? "SIGUIENTE →" : "VER RESULTADO →";
+}
+
+function nextQuestion() {
+  if (state.cur >= Q.length-1) {
+    showResults();
+  } else {
+    state.cur++;
+    loadQuestion();
+  }
+}
+
+/* ════════ RESULTS ════════ */
+function showResults() {
+  showScreen("results");
+  const r    = state.results;
+  const cor  = r.filter(x=>x.correct).length;
+  const err  = r.filter(x=>!x.correct).length;
+  const skip = r.filter(x=>x.sel===-1).length;
+  const pts  = Math.round(cor * 100 / Q.length);
+  const pct  = cor / Q.length;
+  const barCol = pts>=80?"#30AA8C":pts>=60?"#C09828":"#C85060";
+  const elapsed = Math.round((Date.now() - state.startTime) / 1000);
+
+  const areaLabel = AREAS.find(a=>a.id===state.area)?.label||"";
+  document.getElementById("res-name").textContent = state.nom + " " + state.ape;
+  document.getElementById("res-modal").textContent = areaLabel;
+
+  const tStats = Object.keys(TC).map(t => {
+    const qs = Q.filter(q=>q.t===t);
+    const c  = r.filter(x=>x.tema===t&&x.correct).length;
+    return { t, c, tot:qs.length, p:qs.length?c/qs.length:0 };
+  });
+  const best  = [...tStats].sort((a,b)=>b.p-a.p)[0];
+  const worst = [...tStats].sort((a,b)=>a.p-b.p)[0];
+
+  const msg = pts>=80
+    ? `¡Excelente, ${state.nom}! Dominás los tres temas. Seguí así para el examen.`
+    : pts>=60
+    ? `${state.nom}, buen desempeño. Repasa los temas con menor puntaje.`
+    : `${state.nom}, hay temas por reforzar. Revisa las soluciones y vuelve a practicar.`;
+
+  const errors = r.filter(x=>!x.correct);
+
+  let html = `
+    <!-- score -->
+    <div class="score-card fu" style="animation-delay:.14s">
+      <div class="score-big sn" style="animation-delay:.2s">${pts}</div>
+      <div style="flex:1">
+        <div style="font-size:9px;font-weight:700;letter-spacing:2.5px;color:#303040;text-transform:uppercase;margin-bottom:4px">Puntaje Final</div>
+        <div class="sf" style="font-size:20px;font-style:italic;color:var(--text);margin-bottom:10px">${cor} de ${Q.length} correctas</div>
+        <div style="height:3px;background:#0F0F1C;border-radius:2px;overflow:hidden">
+          <div style="height:100%;width:${pct*100}%;background:${barCol};transition:width 1.4s ease"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:4px">
+          <span style="font-size:9px;color:#1E1E2C">0</span>
+          <span style="font-size:9px;color:${barCol};font-weight:700">${pts} / 100 pts</span>
+          <span style="font-size:9px;color:#1E1E2C">100</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- message -->
+    <div class="fu" style="animation-delay:.18s;background:var(--card);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:15px">
+      <p class="sf" style="font-size:17px;font-style:italic;color:#9A9060;line-height:1.8">${msg}</p>
+    </div>
+
+    <!-- trio -->
+    <div class="trio fu" style="animation-delay:.22s">
+      <div class="trio-item">
+        <div class="trio-num sn" style="color:#30AA8C;animation-delay:.3s">${cor}</div>
+        <div class="trio-lbl">Correctas</div>
+      </div>
+      <div class="trio-item">
+        <div class="trio-num sn" style="color:#C85060;animation-delay:.35s">${err}</div>
+        <div class="trio-lbl">Incorrectas</div>
+      </div>
+      <div class="trio-item">
+        <div class="trio-num sn" style="color:var(--gold);animation-delay:.4s">${skip}</div>
+        <div class="trio-lbl">Sin tiempo</div>
+      </div>
+    </div>
+
+    <!-- best/worst -->
+    <div class="half-grid fu" style="animation-delay:.26s">
+      <div class="half-item">
+        <div style="font-size:8px;font-weight:700;letter-spacing:2px;color:#30AA8C;text-transform:uppercase;margin-bottom:8px">↑ Punto Fuerte</div>
+        <div style="font-size:9px;color:#1E1E2C;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px">Mejor Tema</div>
+        <div class="sf" style="font-size:16px;font-style:italic;color:var(--text);margin-bottom:5px;line-height:1.2">${best.t}</div>
+        <div style="font-size:11px;color:#323242">${best.c}/${best.tot} — ${Math.round(best.p*100)}%</div>
+      </div>
+      <div class="half-item">
+        <div style="font-size:8px;font-weight:700;letter-spacing:2px;color:#C85060;text-transform:uppercase;margin-bottom:8px">↓ A Mejorar</div>
+        <div style="font-size:9px;color:#1E1E2C;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px">Tema Difícil</div>
+        <div class="sf" style="font-size:16px;font-style:italic;color:var(--text);margin-bottom:5px;line-height:1.2">${worst.t}</div>
+        <div style="font-size:11px;color:#323242">${worst.c}/${worst.tot} — ${Math.round(worst.p*100)}%</div>
+      </div>
+    </div>
+
+    <!-- rendimiento por tema -->
+    <div class="fu" style="animation-delay:.3s;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 15px">
+      <div style="font-size:9px;font-weight:700;letter-spacing:2.5px;color:#242434;text-transform:uppercase;margin-bottom:16px">Rendimiento por Tema</div>
+      ${tStats.map(({t,c,tot,p})=>{
+        const col=TC[t]||"#4E78E8", bad=p<0.34;
+        return `<div style="margin-bottom:13px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+            <span style="font-size:12.5px;color:${bad?"#C85060":"#484860"};font-weight:${bad?600:400}">${t}</span>
+            <span class="sf" style="font-size:13px;font-style:italic;color:${bad?"#C85060":c===tot?"#30AA8C":"#323242"}">${c} de ${tot}</span>
+          </div>
+          <div class="tema-bar-track">
+            <div class="tema-bar-fill" style="width:${p*100}%;background:${bad?"#C85060":col}"></div>
+          </div>
+        </div>`;
+      }).join("")}
+    </div>`;
+
+  if (errors.length > 0) {
+    html += `
+    <div class="fu" style="animation-delay:.34s;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 15px">
+      <div style="font-size:9px;font-weight:700;letter-spacing:2.5px;color:#242434;text-transform:uppercase;margin-bottom:14px">Revisión de Errores (${errors.length})</div>
+      ${errors.map((res,i)=>{
+        const qObj=Q.find(q=>q.id===res.id);
+        return `<div class="error-item">
+          <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+            <div style="font-size:8px;font-weight:700;letter-spacing:2px;color:${TC[qObj.t]};text-transform:uppercase">Preg. ${qObj.id} · ${qObj.t}</div>
+            <div style="font-size:8px;color:${TIPO_C[qObj.tipo]};letter-spacing:1.5px;text-transform:uppercase">${qObj.tipo}</div>
+          </div>
+          <p style="font-size:12px;color:#383848;margin-bottom:7px;line-height:1.5;font-family:'Cormorant Garamond',serif;font-style:italic">${qObj.q}</p>
+          <div style="display:flex;gap:10px;font-size:11px;flex-wrap:wrap;margin-bottom:6px">
+            <span style="color:#C85060;font-weight:500">✗ ${res.sel===-1?"Sin respuesta":res.chosenAns}</span>
+            <span style="color:#30AA8C;font-weight:500">✓ ${res.correctAns}</span>
+          </div>
+          <div style="font-size:11px;color:#454558;background:#090910;border-radius:6px;padding:8px 11px;line-height:1.65;border-left:2px solid ${TC[qObj.t]}">
+            💡 ${qObj.tip}
+          </div>
+        </div>`;
+      }).join("")}
+    </div>`;
+  }
+
+  // saving indicator
+  html += `
+    <div id="save-status" style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:7px">
+      <span class="saving-dot"></span>
+      <span style="font-size:11px;color:var(--dim);font-weight:500;letter-spacing:.3px">Guardando resultado...</span>
+    </div>
+    <button onclick="resetApp()" style="width:100%;padding:14px;border-radius:10px;border:1px solid var(--border);background:transparent;color:#323242;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;cursor:pointer;-webkit-tap-highlight-color:transparent">
+      Nuevo Repaso
+    </button>`;
+
+  document.getElementById("results-body").innerHTML = html;
+
+  // send to Google Sheets
+  saveToSheet(cor, err, skip, pts, elapsed, tStats, r);
+}
+
+/* ════════ GOOGLE SHEETS ════════ */
+async function saveToSheet(cor, err, skip, pts, elapsed, tStats, results) {
+  const temasObj = {};
+  tStats.forEach(({t,c,tot}) => { temasObj[t] = `${c}/${tot}`; });
+
+  const payload = {
+    nombre:      state.nom,
+    apellido:    state.ape,
+    modalidad:   AREAS.find(a=>a.id===state.area)?.label || state.area,
+    correctas:   cor,
+    incorrectas: err,
+    sinTiempo:   skip,
+    puntaje:     pts,
+    tiempoTotal: elapsed,
+    temas:       temasObj,
+    detalle:     results.map(r => ({ id:r.id, correcto:r.correct }))
+  };
+
+  try {
+    const res = await fetch(APPS_SCRIPT_URL, {
+      method:  "POST",
+      body:    JSON.stringify(payload)
+    });
+    const data = await res.json();
+    const box = document.getElementById("save-status");
+    if (data.status === "ok") {
+      box.innerHTML = `
+        <span style="color:#30AA8C;font-size:12px">✓</span>
+        <span style="font-size:11px;color:#30AA8C;font-weight:500;letter-spacing:.3px">Resultado guardado en Google Sheets ✓</span>`;
+    } else {
+      throw new Error(data.message);
+    }
+  } catch(e) {
+    const box = document.getElementById("save-status");
+    if (box) {
+      box.innerHTML = `
+        <span style="color:#C09828;font-size:12px">⚠</span>
+        <span style="font-size:11px;color:#C09828;font-weight:500">No se pudo guardar (sin conexión)</span>`;
+    }
+  }
+}
+
+/* ════════ UTILS ════════ */
+function showScreen(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById("screen-"+id).classList.add("active");
+  window.scrollTo(0,0);
+}
+
+function resetApp() {
+  clearInterval(state.intervalId);
+  state = { nom:"", ape:"", area:"", cur:0, sec:40,
+    sel:null, revealed:false, results:[], startTime:0, intervalId:null };
+  // reset radio buttons
+  document.querySelectorAll(".area-card").forEach(el => {
+    el.classList.remove("sel");
+    el.style.borderColor = "";
+    el.style.boxShadow = "";
+  });
+  document.getElementById("inp-nom").value = "";
+  document.getElementById("inp-ape").value = "";
+  document.getElementById("btn-start").classList.remove("ready");
+  showScreen("land");
+}
+</script>
+</body>
+</html>
